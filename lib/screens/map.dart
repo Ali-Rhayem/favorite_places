@@ -32,12 +32,14 @@ class _MapScreenState extends State<MapScreen> {
           if (widget.isSelecting)
             IconButton(
               icon: Icon(Icons.save),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLocation);
+              },
             ),
         ],
       ),
       body: GoogleMap(
-        onTap: (position) {
+        onTap: !widget.isSelecting ? null : (position) {
           setState(() {
             _pickedLocation = position;
           });
