@@ -29,11 +29,12 @@ Future<Database> _getDatabase() async {
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   UserPlacesNotifier() : super(const []);
 
-  void loadPlaces() async {
+  Future<void> loadPlaces() async {
     final db = await _getDatabase();
     final data = await db.query('user_places');
-    data.map(
+    final places = data.map(
       (row) => Place(
+        id: row['id'] as String,
         title: row['title'] as String,
         image: File(row['image'] as String),
         location: PlaceLocation(
@@ -41,7 +42,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
             longitude: row['lng'] as double,
             address: row['address'] as String),
       ),
-    );
+    ).toList();
+    state = places;
   }
 
   void addPlace(String title, File image, PlaceLocation location) async {
